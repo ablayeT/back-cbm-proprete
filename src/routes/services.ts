@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import Service from "../models/Service";
+import Service from "../models/service";
 
 const router: Router = Router();
 
@@ -8,8 +8,12 @@ router.get("/", async (req: Request, res: Response) => {
   try {
     const services = await Service.find();
     res.json(services);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred" });
+    }
   }
 });
 
@@ -21,8 +25,12 @@ router.post("/", async (req: Request, res: Response) => {
   try {
     const savedService = await newService.save();
     res.json(savedService);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      res.status(400).json({ message: err.message });
+    } else {
+      res.status(400).json({ message: "An unknown error occurred" });
+    }
   }
 });
 

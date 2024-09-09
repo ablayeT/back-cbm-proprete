@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import authRouter from "./routes/authRouter";
 import contactRouter from "./routes/contactRouter";
+import reservationRouter from "./routes/reservationRouter";
 
 // Charger les variables d'environnement en fonction du NODE_ENV
 if (process.env.NODE_ENV === "production") {
@@ -29,12 +30,17 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
+    serverSelectionTimeoutMS: 30000,
   })
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.log(err));
-
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((error) => {
+    console.error("MongoDB connection error:", error);
+  });
 // Routes
 app.use("/api/auth", authRouter);
 app.use("/api/contact", contactRouter);
+app.use("/api/reservations", reservationRouter);
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
